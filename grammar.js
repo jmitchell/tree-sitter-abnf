@@ -2,7 +2,9 @@ module.exports = grammar({
   name: 'abnf',
 
   rules: {
-    source_file: $ => seq('start = ', $.core_rulename),
+    source_file: $ => seq('start = ', $.__concatenation),
+
+    __concatenation: $ => repeat1($.core_rulename),
 
     core_rulename: $ => choice(
       "ALPHA",
