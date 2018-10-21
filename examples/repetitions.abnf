@@ -1,0 +1,1 @@
+start = 5DIGIT / 1*ALPHA / *SP / *10CRLF

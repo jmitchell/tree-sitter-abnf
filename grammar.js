@@ -5,7 +5,7 @@ module.exports = grammar({
 
   // TODO: revisit conflicts
   conflicts: $ => [
-    [$.__concatenation],
+    [$.concatenation],
     [$.c_wsp],
     [$.elements],
     [$.__alternation]
@@ -48,22 +48,31 @@ module.exports = grammar({
     ),
 
     __alternation: $ => seq(
-      $.__concatenation,
+      $.concatenation,
       repeat(seq(
         $.c_wsp,
         "/",
         $.c_wsp,
-        $.__concatenation
+        $.concatenation
       ))
     ),
 
-    __concatenation: $ => seq(
-      $.core_rulename,
+    concatenation: $ => seq(
+      $.repetition,
       repeat(seq(
         repeat1($.c_wsp),
-        $.core_rulename
+        $.repetition
       ))
     ),
+
+    repetition: $ => seq(optional($.repeat), $.__element),
+
+    repeat: $ => choice(
+      repeat1($.DIGIT),
+      seq(repeat($.DIGIT), "*", repeat($.DIGIT))
+    ),
+
+    __element: $ => choice($.core_rulename, $.rulename),
 
     core_rulename: $ => choice(
       "ALPHA",
