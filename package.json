@@ -4,7 +4,7 @@
   "description": "ABNF grammar for tree-sitter",
   "main": "index.js",
   "scripts": {
-    "test": "tree-sitter parse examples --quiet --time && tree-sitter test",
+    "test": "./script/generate_examples.sh && tree-sitter parse examples --quiet --time && tree-sitter test",
     "generate": "tree-sitter generate && npm install"
   },
   "keywords": [
