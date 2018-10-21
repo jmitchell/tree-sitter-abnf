@@ -11,12 +11,19 @@ module.exports = grammar({
   rules: {
     source_file: $ => seq('start = ', $.__alternation, '\r\n'),
 
+    __c_wsp: $ => choice(
+      $.WSP,
+      seq($.__c_nl, $.WSP)
+    ),
+
+    __c_nl: $ => $.CRLF,
+    
     __alternation: $ => seq(
       $.__concatenation,
       repeat(seq(
-        repeat(' '),
+        $.__c_wsp,
         "/",
-        repeat(' '),
+        $.__c_wsp,
         $.__concatenation
       ))
     ),
@@ -24,7 +31,7 @@ module.exports = grammar({
     __concatenation: $ => seq(
       $.core_rulename,
       repeat(seq(
-        repeat1(' '),
+        repeat1($.__c_wsp),
         $.core_rulename
       ))
     ),
@@ -46,6 +53,18 @@ module.exports = grammar({
       "SP",
       "VCHAR",
       "WSP"
-    )
+    ),
+
+    CR: $ => "\r",
+
+    CRLF: $ => seq($.CR, $.LF),
+    
+    HTAB: $ => "\t",
+
+    LF: $ => "\n",
+    
+    SP: $ => " ",
+
+    WSP: $ => choice($.SP, $.HTAB)
   }
 });
