@@ -8,7 +8,7 @@ module.exports = grammar({
     [$.concatenation],
     [$.c_wsp],
     [$.elements],
-    [$.__alternation]
+    [$.alternation]
   ],
 
   rules: {
@@ -32,7 +32,7 @@ module.exports = grammar({
       repeat($.c_wsp)
     ),
 
-    elements: $ => seq($.__alternation, repeat($.c_wsp)),
+    elements: $ => seq($.alternation, repeat($.c_wsp)),
 
     c_wsp: $ => choice(
       $.WSP,
@@ -47,7 +47,7 @@ module.exports = grammar({
       $.CRLF
     ),
 
-    __alternation: $ => seq(
+    alternation: $ => seq(
       $.concatenation,
       repeat(seq(
         $.c_wsp,
