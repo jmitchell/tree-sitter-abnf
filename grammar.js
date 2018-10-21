@@ -72,8 +72,18 @@ module.exports = grammar({
       seq(repeat($.DIGIT), "*", repeat($.DIGIT))
     ),
 
-    __element: $ => choice($.core_rulename, $.rulename),
+    // TODO: decide whether the unofficial $.core_rulename is useful
+    // here.
+    __element: $ => choice($.core_rulename, $.rulename, $.group, $.option),
 
+    group: $ => seq("(", repeat($.c_wsp), $.alternation, repeat($.c_wsp), ")"),
+
+    option: $ => seq("[", repeat($.c_wsp), $.alternation, repeat($.c_wsp), "]"),
+
+    // RFC 5234 doesn't define these as special rulenames; they just
+    // happen to match the rulename rule. However, Appendix B defines
+    // commonly used rules which use these rulenames and they are
+    // implicitly used in many ABNF grammars.
     core_rulename: $ => choice(
       "ALPHA",
       "BIT",
