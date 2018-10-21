@@ -3,9 +3,24 @@ module.exports = grammar({
 
   extras: $ => [],
 
-  rules: {
-    source_file: $ => seq('start = ', $.__concatenation, '\r\n'),
+  // TODO: revisit conflicts
+  conflicts: $ => [
+    [$.__concatenation]
+  ],
 
+  rules: {
+    source_file: $ => seq('start = ', $.__alternation, '\r\n'),
+
+    __alternation: $ => seq(
+      $.__concatenation,
+      repeat(seq(
+        repeat(' '),
+        "/",
+        repeat(' '),
+        $.__concatenation
+      ))
+    ),
+    
     __concatenation: $ => seq(
       $.core_rulename,
       repeat(seq(

@@ -11,3 +11,6 @@ done
 
 # Concatenation
 echo -en "start = ALPHA SP DIGIT\r\n" > "${EXS_DIR}/concatenation.abnf"
+
+# Alternation
+echo -en "start = ALPHA / SP / DIGIT\r\n" > "${EXS_DIR}/alternation.abnf"
