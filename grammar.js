@@ -1,3 +1,11 @@
+num_val_template = (indicator, char_rule) => seq(
+  indicator, repeat1(char_rule),
+  optional(choice(
+    repeat1(seq(".", repeat1(char_rule))),
+    seq("-", repeat1(char_rule))
+  ))
+);
+
 module.exports = grammar({
   name: 'abnf',
 
@@ -74,11 +82,26 @@ module.exports = grammar({
 
     // TODO: decide whether the unofficial $.core_rulename is useful
     // here.
-    __element: $ => choice($.core_rulename, $.rulename, $.group, $.option),
+    __element: $ => choice(
+      $.core_rulename, $.rulename, $.group, $.option,
+      $.char_val, $.num_val, $.prose_val
+    ),
 
     group: $ => seq("(", repeat($.c_wsp), $.alternation, repeat($.c_wsp), ")"),
 
     option: $ => seq("[", repeat($.c_wsp), $.alternation, repeat($.c_wsp), "]"),
+
+    char_val: $ => seq($.DQUOTE, /[\x20-\x21\x23-\x7E]*/, $.DQUOTE),
+
+    num_val: $ => seq("%", choice($.bin_val, $.dec_val, $.hex_val)),
+
+    bin_val: $ => num_val_template("b", $.BIT),
+
+    dec_val: $ => num_val_template("d", $.DIGIT),
+
+    hex_val: $ => num_val_template("x", $.HEXDIG),
+
+    prose_val: $ => seq("<", repeat(choice(/[\x20-\x3D]/, /[\x3F-\x7E]/)), ">"),
 
     // RFC 5234 doesn't define these as special rulenames; they just
     // happen to match the rulename rule. However, Appendix B defines
@@ -105,11 +128,17 @@ module.exports = grammar({
 
     ALPHA: $ => /[A-Za-z]/,
 
+    BIT: $ => choice("0", "1"),
+
     DIGIT: $ => /[0-9]/,
 
     CR: $ => "\r",
 
     CRLF: $ => seq($.CR, $.LF),
+
+    DQUOTE: $ => "\"",
+
+    HEXDIG: $ => choice($.DIGIT, "A", "B", "C", "D", "E", "F"),
 
     HTAB: $ => "\t",
 
