@@ -1,3 +1,3 @@
 start = *( [ALPHA] 1*SP ) next
 
-next = "hi" / %d48-57 / %x61.62.63.5A / %b1000011 / <abc>
+next = "hi" / %d48-57 / %x61.62.63.5A / %b1000011 / <"hello," they said>

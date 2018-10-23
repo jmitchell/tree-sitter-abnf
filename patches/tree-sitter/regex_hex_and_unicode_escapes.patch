@@ -1,0 +1,106 @@
+diff --git a/src/compiler/prepare_grammar/parse_regex.cc b/src/compiler/prepare_grammar/parse_regex.cc
+index 2b386907..719b2f5a 100644
+--- a/src/compiler/prepare_grammar/parse_regex.cc
++++ b/src/compiler/prepare_grammar/parse_regex.cc
+@@ -1,6 +1,7 @@
+ #include "compiler/prepare_grammar/parse_regex.h"
+ #include <string>
+ #include <utility>
++#include <cassert>
+ #include <cwctype>
+ #include <vector>
+ #include "compiler/rule.h"
+@@ -245,6 +246,40 @@ class PatternParser {
+     return value;
+   }
+ 
++  char nibble_val(uint32_t c) {
++    if (isxdigit(c))
++      return isdigit(c) ? c - '0' : tolower(c) - 'a' + 10;
++
++    assert(!"Expected hex nibble character");
++    return -1;
++  }
++
++  CharacterSet unicode_escape() {
++    uint32_t v = 0;
++    next();
++    v = nibble_val(peek());
++    next();
++    v <<= 4;
++    v += nibble_val(peek());
++    next();
++    v <<= 4;
++    v += nibble_val(peek());
++    next();
++    v <<= 4;
++    v += nibble_val(peek());
++    return CharacterSet().include(v);
++  }
++
++  CharacterSet hex_escape() {
++    uint32_t v = 0;
++    next();
++    v = nibble_val(peek());
++    next();
++    v <<= 4;
++    v += nibble_val(peek());
++    return CharacterSet().include(v);
++  }
++
+   CharacterSet escaped_char(uint32_t value) {
+     switch (value) {
+       case 'w':
+@@ -285,6 +320,10 @@ class PatternParser {
+         return CharacterSet().include('\n');
+       case 'r':
+         return CharacterSet().include('\r');
++      case 'u':
++        return unicode_escape();
++      case 'x':
++        return hex_escape();
+       default:
+         return CharacterSet().include(value);
+     }
+diff --git a/test/compiler/prepare_grammar/parse_regex_test.cc b/test/compiler/prepare_grammar/parse_regex_test.cc
+index 27fd43b1..e42da969 100644
+--- a/test/compiler/prepare_grammar/parse_regex_test.cc
++++ b/test/compiler/prepare_grammar/parse_regex_test.cc
+@@ -96,6 +96,37 @@ describe("parse_regex", []() {
+       }}
+     },
+ 
++    {
++      "hexadecimal escape sequence",
++      "\\x7E",
++      CharacterSet{{'~'}}
++    },
++
++    {
++      "hexadecimal escape sequence ranges",
++      "[\\x30-\\x39]",
++      CharacterSet{{
++        '0', '1', '2', '3', '4',
++        '5', '6', '7', '8', '9'
++      }}
++    },
++
++    {
++      "unicode escape sequence",
++      "\\u2200",
++      CharacterSet{{
++        0x2200
++      }}
++    },
++
++    {
++      "unicode escape sequence ranges",
++      "[\\u22c0-\\u22c1]",
++      CharacterSet{{
++        0x22c0, 0x22c1
++      }}
++    },
++
+     {
+       "negated characters",
+       "[^a\\d]",
