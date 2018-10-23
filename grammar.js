@@ -73,17 +73,17 @@ module.exports = grammar({
       ))
     ),
 
-    repetition: $ => seq(optional($.repeat), $.__element),
+    repetition: $ => seq(optional($.repeat), $.element),
 
     repeat: $ => choice(
       repeat1($.DIGIT),
       seq(repeat($.DIGIT), "*", repeat($.DIGIT))
     ),
 
-    // TODO: decide whether the unofficial $.core_rulename is useful
-    // here.
-    __element: $ => choice(
-      $.core_rulename, $.rulename, $.group, $.option,
+    // NB: $.core_rulename isn't explicitly defined in RFC 5234.
+    element: $ => choice(
+      $.core_rulename,
+      $.rulename, $.group, $.option,
       $.char_val, $.num_val, $.prose_val
     ),
 
@@ -101,7 +101,7 @@ module.exports = grammar({
 
     hex_val: $ => num_val_template("x", $.HEXDIG),
 
-    prose_val: $ => seq("<", repeat(choice(/[\x20-\x3D]/, /[\x3F-\x7E]/)), ">"),
+    prose_val: $ => seq("<", /[\x20-\x3D\x3F-\x7E]*/, ">"),
 
     // RFC 5234 doesn't define these as special rulenames; they just
     // happen to match the rulename rule. However, Appendix B defines
