@@ -14,7 +14,7 @@ module.exports = grammar({
   // TODO: revisit conflicts
   conflicts: $ => [
     [$.concatenation],
-    [$.c_wsp],
+    [$._c_wsp],
     [$.elements],
     [$.alternation]
   ],
@@ -24,10 +24,10 @@ module.exports = grammar({
 
     rulelist: $ => repeat1(choice(
       $.rule,
-      seq(repeat($.c_wsp), $.c_nl)
+      seq(repeat($._c_wsp), $._c_nl)
     )),
 
-    rule: $ => seq($.rulename, $.defined_as, $.elements, $.c_nl),
+    rule: $ => seq($.rulename, $.defined_as, $.elements, $._c_nl),
 
     rulename: $ => seq(
       $.ALPHA,
@@ -35,32 +35,33 @@ module.exports = grammar({
     ),
 
     defined_as: $ => seq(
-      repeat($.c_wsp),
+      repeat($._c_wsp),
       choice("=", "=/"),
-      repeat($.c_wsp)
+      repeat($._c_wsp)
     ),
 
-    elements: $ => seq($.alternation, repeat($.c_wsp)),
+    elements: $ => seq($.alternation, repeat($._c_wsp)),
 
-    c_wsp: $ => choice(
-      $.WSP,
-      seq($.c_nl, $.WSP)
+    _c_wsp: $ => choice(
+      $._WSP,
+      seq($._c_nl, $._WSP)
     ),
 
-    c_nl: $ => choice($.comment, $.CRLF),
+    _c_nl: $ => choice($.comment, $._CRLF),
 
-    comment: $ => seq(
-      ";",
-      repeat(choice($.WSP, $.VCHAR)),
-      $.CRLF
-    ),
+    // comment: $ => seq(
+    //   ";",
+    //   repeat(choice($._WSP, $.VCHAR)),
+    //   $._CRLF
+    // ),
+    comment: $ => /;[ \t\x21-\x7E]*\r\n/,
 
     alternation: $ => seq(
       $.concatenation,
       repeat(seq(
-        $.c_wsp,
+        $._c_wsp,
         "/",
-        $.c_wsp,
+        $._c_wsp,
         $.concatenation
       ))
     ),
@@ -68,7 +69,7 @@ module.exports = grammar({
     concatenation: $ => seq(
       $.repetition,
       repeat(seq(
-        repeat1($.c_wsp),
+        repeat1($._c_wsp),
         $.repetition
       ))
     ),
@@ -87,11 +88,11 @@ module.exports = grammar({
       $.char_val, $.num_val, $.prose_val
     ),
 
-    group: $ => seq("(", repeat($.c_wsp), $.alternation, repeat($.c_wsp), ")"),
+    group: $ => seq("(", repeat($._c_wsp), $.alternation, repeat($._c_wsp), ")"),
 
-    option: $ => seq("[", repeat($.c_wsp), $.alternation, repeat($.c_wsp), "]"),
+    option: $ => seq("[", repeat($._c_wsp), $.alternation, repeat($._c_wsp), "]"),
 
-    char_val: $ => seq($.DQUOTE, /[\x20-\x21\x23-\x7E]*/, $.DQUOTE),
+    char_val: $ => seq($._DQUOTE, /[\x20-\x21\x23-\x7E]*/, $._DQUOTE),
 
     num_val: $ => seq("%", choice($.bin_val, $.dec_val, $.hex_val)),
 
@@ -132,22 +133,24 @@ module.exports = grammar({
 
     DIGIT: $ => /[0-9]/,
 
-    CR: $ => "\r",
+    _CR: $ => "\r",
 
-    CRLF: $ => seq($.CR, $.LF),
+    _CRLF: $ => seq($._CR, $._LF),
 
-    DQUOTE: $ => "\"",
+    _DQUOTE: $ => "\"",
 
-    HEXDIG: $ => choice($.DIGIT, "A", "B", "C", "D", "E", "F"),
+    // RFC 5234 only defines upper-case HEXDIGs, but this grammar is
+    // more lenient.
+    HEXDIG: $ => /[0-9A-Fa-f]/,
 
-    HTAB: $ => "\t",
+    _HTAB: $ => "\t",
 
-    LF: $ => "\n",
+    _LF: $ => "\n",
 
-    SP: $ => " ",
+    _SP: $ => " ",
 
     VCHAR: $ => /[\x21-\x7E]/,
 
-    WSP: $ => choice($.SP, $.HTAB)
+    _WSP: $ => choice($._SP, $._HTAB)
   }
 });
