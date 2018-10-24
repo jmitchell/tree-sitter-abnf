@@ -59,9 +59,9 @@ module.exports = grammar({
     alternation: $ => seq(
       $.concatenation,
       repeat(seq(
-        $._c_wsp,
+        repeat($._c_wsp),
         "/",
-        $._c_wsp,
+        repeat($._c_wsp),
         $.concatenation
       ))
     ),
