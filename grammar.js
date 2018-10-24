@@ -115,7 +115,14 @@ module.exports = grammar({
 
     option: $ => seq("[", repeat($._c_wsp), $.alternation, repeat($._c_wsp), "]"),
 
-    char_val: $ => seq($._DQUOTE, /[\x20-\x21\x23-\x7E]*/, $._DQUOTE),
+    // Updated by RFC 7405
+    char_val: $ => choice($.case_insensitive_string, $.case_sensitive_string),
+
+    case_insensitive_string: $ => seq(optional("%i"), $.quoted_string),
+
+    case_sensitive_string: $ => seq("%s", $.quoted_string),
+
+    quoted_string: $ => seq($._DQUOTE, /[\x20-\x21\x23-\x7E]*/, $._DQUOTE),
 
     num_val: $ => seq("%", choice($.bin_val, $.dec_val, $.hex_val)),
 
