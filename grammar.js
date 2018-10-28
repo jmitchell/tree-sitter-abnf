@@ -70,14 +70,14 @@ module.exports = grammar({
       $._c_nl
     ),
 
-    _c_nl: $ => choice($.comment, $._CRLF),
+    _c_nl: $ => choice($._comment, $._CRLF),
 
     // comment: $ => seq(
     //   ";",
     //   repeat(choice($._WSP, $.VCHAR)),
     //   $._CRLF
     // ),
-    comment: $ => /;[ \t\x21-\x7E]*\r\n/,
+    _comment: $ => /;[ \t\x21-\x7E]*\r\n/,
 
     alternation: $ => seq(
       $.concatenation,
