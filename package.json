@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "nan": "^2.11.1",
-    "tree-sitter-cli": "file:tree-sitter-cli"
+    "tree-sitter-cli": "file:vendor/tree-sitter-cli"
   },
   "devDependencies": {}
 }

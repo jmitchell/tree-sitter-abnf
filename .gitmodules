@@ -1,0 +1,3 @@
+[submodule "vendor/tree-sitter-cli"]
+	path = vendor/tree-sitter-cli
+	url = https://github.com/jmitchell/tree-sitter-cli
