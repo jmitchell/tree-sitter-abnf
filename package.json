@@ -18,8 +18,9 @@
   "author": "Jacob Mitchell",
   "license": "MIT",
   "dependencies": {
-    "nan": "^2.11.1",
-    "tree-sitter-cli": "file:vendor/tree-sitter-cli"
+    "nan": "^2.12.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "tree-sitter-cli": "file:vendor/tree-sitter-cli"
+  }
 }
