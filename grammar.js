@@ -15,6 +15,7 @@ module.exports = grammar({
   conflicts: $ => [
     [$.concatenation],
     [$._c_wsp],
+    [$._c_wsp, $.rulelist],
     [$.elements],
     [$.alternation]
   ],

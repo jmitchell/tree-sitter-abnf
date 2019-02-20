@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "./script/generate_examples.sh && tree-sitter parse examples --quiet --time && tree-sitter test",
+    "test": "./script/generate_examples.sh && tree-sitter parse examples/*.abnf examples/generated/*.abnf --quiet --time && tree-sitter test",
     "generate": "tree-sitter generate && npm install"
   },
   "keywords": [
@@ -20,7 +20,5 @@
   "dependencies": {
     "nan": "^2.12.1"
   },
-  "devDependencies": {
-    "tree-sitter-cli": "file:vendor/tree-sitter-cli"
-  }
+  "devDependencies": {}
 }

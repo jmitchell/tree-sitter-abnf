@@ -8,6 +8,7 @@ cache: npm
 compiler: clang-4.0
 env:
   - CXX=clang-4.0
+  - PATH="$HOME/.cargo/bin:$PATH"
 
 addons:
   apt:
@@ -16,12 +17,15 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - clang-4.0
+      - rustc
+      - cargo
 
 install:
   - npm ci
 
 before_script:
   - mkdir -p corpus/
+  - pushd ./vendor/tree-sitter && cargo install --path cli && popd
 
 script:
   - npm run generate
