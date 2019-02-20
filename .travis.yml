@@ -27,6 +27,7 @@ before_script:
 
   - git clone https://github.com/tree-sitter/tree-sitter.git /tmp/tree-sitter
   - pushd /tmp/tree-sitter
+  - git checkout 4db132ff94a5775f0c06b743ff1c603251222d4f
   - git submodule update --init --recursive
   - cargo install --path cli
   - popd
