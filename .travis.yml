@@ -8,7 +8,6 @@ cache: npm
 compiler: clang-4.0
 env:
   - CXX=clang-4.0
-  - PATH="$HOME/.cargo/bin:$PATH"
 
 addons:
   apt:
@@ -17,15 +16,16 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - clang-4.0
-      - rustc
-      - cargo
 
 install:
   - npm ci
 
 before_script:
-  - mkdir -p corpus/
+  - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
+  - bash /tmp/rustup.sh -y
+  - export PATH="$HOME/.cargo/bin:$PATH"
   - pushd ./vendor/tree-sitter && cargo install --path cli && popd
+  - mkdir -p corpus/
 
 script:
   - npm run generate
