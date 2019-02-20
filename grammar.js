@@ -11,12 +11,8 @@ module.exports = grammar({
 
   extras: $ => [],
 
-  // TODO: revisit conflicts
   conflicts: $ => [
     [$.concatenation],
-    [$._c_wsp],
-    [$._c_wsp, $.rulelist],
-    [$.elements],
     [$.alternation]
   ],
 
@@ -25,7 +21,7 @@ module.exports = grammar({
 
     rulelist: $ => repeat1(choice(
       $.rule,
-      seq(repeat($._c_wsp), $._c_nl)
+      prec(1, seq(repeat($._c_wsp), $._c_nl))
     )),
 
     rule: $ => seq($.rulename, $.defined_as, $.elements, $._c_nl),
@@ -42,7 +38,7 @@ module.exports = grammar({
       repeat($._c_wsp)
     ),
 
-    elements: $ => seq($.alternation, repeat($._c_wsp)),
+    elements: $ => prec.left(1, seq($.alternation, repeat($._c_wsp))),
 
     // RFC 5234 requires `c-nl` to be followed by `WSP`, but this
     // isn't compatible with alternations which are split across
@@ -64,6 +60,10 @@ module.exports = grammar({
     // In case the explanation wasn't clear, the pedantic and annoying
     // fix is to change `|$` to `| $`, or relax the grammar for ABNF
     // itself as done here.
+    //
+    // For the purposes of Dhall this relaxed interpretation of RFC
+    // 5234 won't be necessary after
+    // https://github.com/dhall-lang/dhall-lang/pull/379 is merged.
     _c_wsp: $ => choice(
       $._WSP,
 
