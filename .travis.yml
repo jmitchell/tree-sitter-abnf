@@ -24,7 +24,13 @@ before_script:
   - curl https://sh.rustup.rs -sSf > /tmp/rustup.sh
   - bash /tmp/rustup.sh -y
   - export PATH="$HOME/.cargo/bin:$PATH"
-  - pushd ./vendor/tree-sitter && cargo install --path cli && popd
+
+  - git clone https://github.com/tree-sitter/tree-sitter.git /tmp/tree-sitter
+  - pushd /tmp/tree-sitter
+  - git submodule update --init --recursive
+  - cargo install --path cli
+  - popd
+
   - mkdir -p corpus/
 
 script:
