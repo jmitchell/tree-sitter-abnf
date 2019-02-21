@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-abnf",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ABNF grammar for tree-sitter",
   "repository": {
     "type": "git",

@@ -132,7 +132,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_comment"
+          "name": "comment"
         },
         {
           "type": "SYMBOL",
@@ -140,7 +140,7 @@
         }
       ]
     },
-    "_comment": {
+    "comment": {
       "type": "PATTERN",
       "value": ";[ \\t\\x21-\\x7E]*\\r\\n"
     },
