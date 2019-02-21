@@ -8,8 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "./script/generate_examples.sh && tree-sitter parse examples/*.abnf examples/generated/*.abnf --quiet --time && tree-sitter test",
-    "generate": "tree-sitter generate && npm install"
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "tree-sitter test && tree-sitter parse examples/*.abnf examples/generated/*.abnf --quiet --time"
   },
   "keywords": [
     "parser",

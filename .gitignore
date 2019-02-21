@@ -5,4 +5,3 @@ node_modules/
 binding.gyp
 build/
 src/
-examples/generated/
