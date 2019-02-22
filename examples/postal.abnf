@@ -1,3 +1,5 @@
+; Example ABNF from Wikipedia
+; https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form#Example
 postal-address   = name-part street zip-part
 
 name-part        = *(personal-part SP) last-name [SP suffix] CRLF
