@@ -2,3 +2,8 @@ corpus
 examples
 build
 script
+Vagrantfile
+.vagrant
+.dir-locals.el
+.travis.yml
+*.log
