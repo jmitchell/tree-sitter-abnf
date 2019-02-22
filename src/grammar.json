@@ -122,8 +122,17 @@
           "name": "_WSP"
         },
         {
-          "type": "SYMBOL",
-          "name": "_c_nl"
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_c_nl"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_WSP"
+            }
+          ]
         }
       ]
     },
