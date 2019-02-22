@@ -40,35 +40,10 @@ module.exports = grammar({
 
     elements: $ => prec.left(1, seq($.alternation, repeat($._c_wsp))),
 
-    // RFC 5234 requires `c-nl` to be followed by `WSP`, but this
-    // isn't compatible with alternations which are split across
-    // multiple lines AND have empty lines (without spaces)
-    // interspersed. Adding a space to those empty lines is a
-    // reasonable fix, but most ABNF authors would consider this a
-    // nuissance.
-    //
-    // The ABNF for the Dhall language, for example, has rules like
-    // this (`|` denotes left margin and `$` denotes EOL):
-    //
-    //   |expression =$
-    //   |    ; "\(x : a) -> b"$
-    //   |      lambda open-parens label colon expression close-parens arrow expression$
-    //   |$
-    //   |    ; "if a then b else c"$
-    //   |    / if expression then expression else expression$
-    //
-    // In case the explanation wasn't clear, the pedantic and annoying
-    // fix is to change `|$` to `| $`, or relax the grammar for ABNF
-    // itself as done here.
-    //
-    // For the purposes of Dhall this relaxed interpretation of RFC
-    // 5234 won't be necessary after
-    // https://github.com/dhall-lang/dhall-lang/pull/379 is merged.
     _c_wsp: $ => choice(
       $._WSP,
 
-      // seq($._c_nl, $._WSP)
-      $._c_nl
+      seq($._c_nl, $._WSP)
     ),
 
     _c_nl: $ => choice($.comment, $._CRLF),
